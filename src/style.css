@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
-.image {
-  @apply w-full p-2 border-1 border-gray-300 rounded-lg shadow-md outline-none;
+.image-wrapper {
+  @apply w-full p-2 outline-none space-y-2;
+}
+
+.image-input {
+  @apply outline-none;
 }

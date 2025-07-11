@@ -14,6 +14,8 @@ declare global {
 
 export const editor = new EditorJS({
   holder: "editorjs",
+  autofocus: true,
+  defaultBlock: "image",
 
   tools: {
     header: Header,
@@ -45,11 +47,7 @@ export const editor = new EditorJS({
   //   ],
   // },
 
-  onReady: () => {
-    console.log("Editor.js is ready!");
-  },
+  onReady: () => {},
 
-  onChange: (_, event) => {
-    console.log("Content changed!", event);
-  },
+  onChange: (_api, _event) => {},
 });
