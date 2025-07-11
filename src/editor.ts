@@ -15,7 +15,7 @@ declare global {
 export const editor = new EditorJS({
   holder: "editorjs",
   autofocus: true,
-  defaultBlock: "image",
+  defaultBlock: "paragraph",
 
   tools: {
     header: Header,
