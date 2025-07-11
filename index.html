@@ -13,10 +13,16 @@
     >
       <h1 class="text-3xl">Editor Js Prototype</h1>
     </header>
-    <main>
+    <main class="max-w-3xl mx-auto p-4 flex flex-col gap-4">
       <div id="editorjs"></div>
 
-      <button id="save-button">Save</button>
+      <button
+        id="save-button"
+        class="bg-indigo-600 w-full rounded-lg py-2 text-white font-semibold hover:bg-indigo-700 active:bg-indigo-800 transition-colors"
+      >
+        Save
+      </button>
+      <div>
       <pre id="output"></pre>
     </main>
     <script type="module" src="/src/main.ts"></script>
