@@ -1,4 +1,11 @@
-import type { API, BlockTool, BlockToolData } from "@editorjs/editorjs";
+import type {
+  API,
+  BlockTool,
+  BlockToolData,
+  PasteEvent,
+  FilePasteEvent,
+  PatternPasteEvent,
+} from "@editorjs/editorjs";
 
 interface Tune {
   name: string;
@@ -23,6 +30,19 @@ class CustomImage implements BlockTool {
     return {
       title: "Image",
       icon: "⚒️",
+    };
+  }
+
+  // 툴이 붙여넣기 이벤트를 수신할 수 있도록 설정
+  static get pasteConfig() {
+    return {
+      files: {
+        mimeTypes: ["image/*"],
+        extensions: [".jpg", ".jpeg", ".png", ".gif"],
+      },
+      patterns: {
+        image: /https?:\/\/\S+\.(gif|jpe?g|tiff|png)$/i,
+      },
     };
   }
 
@@ -81,6 +101,27 @@ class CustomImage implements BlockTool {
       return false;
     }
     return true;
+  }
+
+  // 붙여넣기 이벤트
+  onPaste(event: PasteEvent): void {
+    if (event.type === "file") {
+      const filePasteEvent = event as FilePasteEvent;
+      const file = filePasteEvent.detail.file;
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        this.renderImageView(e.target?.result as string);
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+    if (event.type === "pattern") {
+      const patternPasteEvent = event as PatternPasteEvent;
+      const url = patternPasteEvent.detail.data;
+      this.renderImageView(url);
+    }
   }
 
   // utility 함수 -----------------------------------------
