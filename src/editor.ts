@@ -1,10 +1,10 @@
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 import List from "@editorjs/list";
-import Image from "@editorjs/image";
 import Table from "@editorjs/table";
 import Quote from "@editorjs/quote";
 import InlineCode from "@editorjs/inline-code";
+import Image from "./image";
 
 declare global {
   interface Window {
@@ -27,18 +27,23 @@ export const editor = new EditorJS({
         captionPlaceholder: "Quote's author",
       },
     },
-    image: {
-      class: Image,
-      config: {
-        endpoints: {
-          byFile: "https://api.example.com/upload",
-          byUrl: "https://api.example.com/fetch",
-        },
-      },
-    },
+    image: Image,
   },
 
   placeholder: "Type your text here...",
+
+  // 초기 데이터를 정의할 수 있음
+  // data: {
+  //   blocks: [
+  //     {
+  //       type: "header",
+  //       data: {
+  //         text: "Welcome to Editor.js",
+  //         level: 2,
+  //       },
+  //     },
+  //   ],
+  // },
 
   onReady: () => {
     console.log("Editor.js is ready!");
