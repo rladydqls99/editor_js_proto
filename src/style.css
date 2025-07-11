@@ -1,5 +1,29 @@
 @import "tailwindcss";
 
+h1 {
+  @apply text-3xl font-bold mb-4;
+}
+
+h2 {
+  @apply text-2xl font-semibold mb-3;
+}
+
+h3 {
+  @apply text-xl font-medium mb-2;
+}
+
+h4 {
+  @apply text-lg font-normal mb-1;
+}
+
+h5 {
+  @apply text-base font-light mb-1;
+}
+
+h6 {
+  @apply text-sm font-thin mb-1;
+}
+
 .image-wrapper {
   @apply w-full p-2 outline-none space-y-2 data-[setting=with-border]:border data-[setting=with-border]:border-gray-300 data-[setting=with-border]:rounded-md data-[setting=with-background]:bg-gray-100 data-[setting=with-background]:rounded-md;
 }
