@@ -102,6 +102,13 @@ class CustomImage implements BlockTool {
   private acceptTune() {
     this.TuneList.forEach((tune) => {
       this.wrapper?.classList.toggle(tune.name, !!this.data[tune.name]);
+
+      if (tune.name === "stretched") {
+        this.api.blocks.stretchBlock(
+          this.api.blocks.getCurrentBlockIndex(),
+          !!this.data.stretched
+        );
+      }
     });
   }
 
