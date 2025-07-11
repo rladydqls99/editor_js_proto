@@ -5,6 +5,7 @@ import type {
   PasteEvent,
   FilePasteEvent,
   PatternPasteEvent,
+  ToolConfig,
 } from "@editorjs/editorjs";
 
 interface Tune {
@@ -13,8 +14,9 @@ interface Tune {
 }
 
 interface CustomImageInstance {
-  data: BlockToolData;
+  data?: BlockToolData;
   api: API;
+  config?: ToolConfig;
 }
 
 // https://cdn.pixabay.com/photo/2017/09/01/21/53/blue-2705642_1280.jpg
@@ -22,8 +24,13 @@ interface CustomImageInstance {
 class CustomImage implements BlockTool {
   private data: BlockToolData;
   private api: API;
+  private config: ToolConfig;
   private wrapper: HTMLElement | undefined;
-  private TuneList: Tune[];
+  private TuneList: Tune[] = [
+    { name: "with-border", icon: "🖼️" },
+    { name: "with-background", icon: "🎨" },
+    { name: "stretched", icon: "📏" },
+  ];
 
   // Editor.js 툴바에 표시될 아이콘과 제목을 정의
   static get toolbox() {
@@ -47,19 +54,15 @@ class CustomImage implements BlockTool {
   }
 
   // 최초에 생성될 때 호출
-  constructor({ data, api }: CustomImageInstance) {
+  constructor({ data, api, config }: CustomImageInstance) {
     this.data = data || { url: "" };
     this.api = api;
-    this.TuneList = [
-      { name: "with-border", icon: "🖼️" },
-      { name: "with-background", icon: "🎨" },
-      { name: "stretched", icon: "📏" },
-    ];
+    this.config = config || {};
   }
 
   // Editor.js가 이 툴을 렌더링할 때 호출
   render() {
-    const input = this.createInput("Paste image URL here...");
+    const input = this.createInput(this.config.placeholder);
     input.value = this.data && this.data.url ? this.data.url : "";
 
     input.addEventListener("paste", (event: ClipboardEvent) => {

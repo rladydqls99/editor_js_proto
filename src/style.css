@@ -5,7 +5,7 @@
 }
 
 .image-input {
-  @apply outline-none;
+  @apply outline-none w-full;
 }
 
 .tuneList-wrapper {

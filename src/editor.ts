@@ -29,7 +29,13 @@ export const editor = new EditorJS({
         captionPlaceholder: "Quote's author",
       },
     },
-    image: CustomImage,
+    image: {
+      class: CustomImage,
+      inlineToolbar: false,
+      config: {
+        placeholder: "Paste an image URL or upload an image file...",
+      },
+    },
   },
 
   placeholder: "Type your text here...",
