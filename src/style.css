@@ -1,9 +1,17 @@
 @import "tailwindcss";
 
 .image-wrapper {
-  @apply w-full p-2 outline-none space-y-2;
+  @apply w-full p-2 outline-none space-y-2 data-[setting=with-border]:border data-[setting=with-border]:border-gray-300 data-[setting=with-border]:rounded-md data-[setting=with-background]:bg-gray-100 data-[setting=with-background]:rounded-md;
 }
 
 .image-input {
   @apply outline-none;
+}
+
+.settings-wrapper {
+  @apply flex items-center gap-1;
+}
+
+.setting-button {
+  @apply cursor-pointer hover:-translate-y-0.5 transition-transform duration-200 ease-in-out data-[state=active]:bg-gray-200 data-[state=active]:rounded-md;
 }
