@@ -1,19 +1,22 @@
-import type { BlockTool, BlockToolData } from "@editorjs/editorjs";
-import type { MenuConfig } from "@editorjs/editorjs/types/tools";
+import type { API, BlockTool, BlockToolData } from "@editorjs/editorjs";
 
-interface Data {
-  url: string;
-}
-interface Setting {
+interface Tune {
   name: string;
   icon: string;
 }
 
+interface CustomImageInstance {
+  data: BlockToolData;
+  api: API;
+}
+
+// https://cdn.pixabay.com/photo/2017/09/01/21/53/blue-2705642_1280.jpg
+
 class CustomImage implements BlockTool {
-  private data: Data;
+  private data: BlockToolData;
+  private api: API;
   private wrapper: HTMLElement | undefined;
-  private settings: Setting[];
-  private settingButtons: HTMLButtonElement[] = []; // 설정 버튼들의 참조 저장
+  private TuneList: Tune[];
 
   // Editor.js 툴바에 표시될 아이콘과 제목을 정의
   static get toolbox() {
@@ -24,11 +27,13 @@ class CustomImage implements BlockTool {
   }
 
   // 최초에 생성될 때 호출
-  constructor({ data }: { data: Data }) {
+  constructor({ data, api }: CustomImageInstance) {
     this.data = data || { url: "" };
-    this.settings = [
+    this.api = api;
+    this.TuneList = [
       { name: "with-border", icon: "🖼️" },
       { name: "with-background", icon: "🎨" },
+      { name: "stretched", icon: "📏" },
     ];
   }
 
@@ -49,14 +54,14 @@ class CustomImage implements BlockTool {
 
   // Editor.js가 이 툴의 설정을 렌더링할 때 호출
   renderSettings() {
-    const settingsWrapper = this.createWrapper("settings-wrapper");
+    const tuneWrapper = this.createWrapper("tuneList-wrapper");
 
-    this.settingButtons = this.settings.map((setting) =>
-      this.createSettingButton(setting)
+    const tuneButtonList = this.TuneList.map((tune) =>
+      this.createTuneButton(tune)
     );
-    settingsWrapper.append(...this.settingButtons);
+    tuneWrapper.append(...tuneButtonList);
 
-    return settingsWrapper;
+    return tuneWrapper;
   }
 
   // Editor.js가 이 툴의 데이터를 저장할 때 호출
@@ -64,10 +69,10 @@ class CustomImage implements BlockTool {
     const image = blockContent.querySelector("img");
     const caption = blockContent.querySelector("input");
 
-    return {
+    return Object.assign(this.data, {
       url: image?.src || "",
       caption: caption?.value || "",
-    };
+    });
   }
 
   // Editor.js가 이 툴의 데이터를 불러올 때 호출하여 유효성 검증
@@ -86,23 +91,18 @@ class CustomImage implements BlockTool {
     const caption = this.createInput("Caption...");
 
     this.wrapper.replaceChildren(image, caption);
+    this.acceptTune();
   }
 
-  private toggleSetting(clickedButton: HTMLButtonElement) {
-    if (!this.wrapper) return;
+  private toggleTune(tune: Tune) {
+    this.data[tune.name] = !this.data[tune.name];
+    this.acceptTune();
+  }
 
-    if (clickedButton.dataset.state === "active") {
-      clickedButton.dataset.state = "inactive";
-      this.wrapper.dataset.setting = "";
-      return;
-    }
-
-    this.settingButtons.forEach((button) => {
-      button.dataset.state = "inactive";
+  private acceptTune() {
+    this.TuneList.forEach((tune) => {
+      this.wrapper?.classList.toggle(tune.name, !!this.data[tune.name]);
     });
-
-    clickedButton.dataset.state = "active";
-    this.wrapper.dataset.setting = clickedButton.dataset.name || "";
   }
 
   // 컴포넌트 생성 함수 -----------------------------------------
@@ -129,15 +129,14 @@ class CustomImage implements BlockTool {
     return image;
   }
 
-  private createSettingButton(setting: Setting) {
+  private createTuneButton(tune: Tune) {
     const button = document.createElement("button");
-    button.classList.add("setting-button");
-    button.innerHTML = setting.icon;
-    button.dataset.state = "inactive";
-    button.dataset.name = setting.name;
+    button.classList.add("tune-button");
+    button.innerHTML = tune.icon;
 
     button.addEventListener("click", () => {
-      this.toggleSetting(button);
+      this.toggleTune(tune);
+      button.classList.toggle("tune-button-active");
     });
 
     return button;

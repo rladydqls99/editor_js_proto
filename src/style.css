@@ -8,10 +8,20 @@
   @apply outline-none;
 }
 
-.settings-wrapper {
+.tuneList-wrapper {
   @apply flex items-center gap-1;
 }
 
-.setting-button {
-  @apply cursor-pointer hover:-translate-y-0.5 transition-transform duration-200 ease-in-out data-[state=active]:bg-gray-200 data-[state=active]:rounded-md;
+.tune-button {
+  @apply cursor-pointer hover:-translate-y-0.5 transition-transform duration-200 ease-in-out;
+}
+.tune-button-active {
+  @apply bg-gray-200 rounded-md;
+}
+
+.with-border {
+  @apply border border-gray-300 rounded-md;
+}
+.with-background {
+  @apply bg-gray-100 rounded-md;
 }
