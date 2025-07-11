@@ -4,7 +4,7 @@ import List from "@editorjs/list";
 import Table from "@editorjs/table";
 import Quote from "@editorjs/quote";
 import InlineCode from "@editorjs/inline-code";
-import Image from "./image";
+import CustomImage from "./image";
 
 declare global {
   interface Window {
@@ -27,7 +27,7 @@ export const editor = new EditorJS({
         captionPlaceholder: "Quote's author",
       },
     },
-    image: Image,
+    image: CustomImage,
   },
 
   placeholder: "Type your text here...",
