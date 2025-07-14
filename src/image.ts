@@ -6,17 +6,12 @@ import type {
   PatternPasteEvent,
   ToolConfig,
   BlockAPI,
+  BlockToolConstructorOptions,
 } from "@editorjs/editorjs";
 
 interface Tune {
   name: string;
   icon: string;
-}
-
-interface CustomImageInstance {
-  data?: BlockToolData;
-  block: BlockAPI;
-  config?: ToolConfig;
 }
 
 // https://cdn.pixabay.com/photo/2017/09/01/21/53/blue-2705642_1280.jpg
@@ -54,7 +49,7 @@ class CustomImage implements BlockTool {
   }
 
   // 최초에 생성될 때 호출
-  constructor({ data, block, config }: CustomImageInstance) {
+  constructor({ data, block, config }: BlockToolConstructorOptions) {
     this._data = data || { url: "" };
     this._block = block;
     this._config = config || {};
