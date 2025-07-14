@@ -18,7 +18,7 @@ class UIEventHandler {
   }
 
   private displayOutput(data: any): void {
-    this.elements.output.innerHTML = JSON.stringify(data, null, 4);
+    this.elements.output.innerHTML = JSON.stringify(data, null, 2);
   }
 
   registerEventListeners(): void {

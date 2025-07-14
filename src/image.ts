@@ -1,11 +1,11 @@
 import type {
-  API,
   BlockTool,
   BlockToolData,
   PasteEvent,
   FilePasteEvent,
   PatternPasteEvent,
   ToolConfig,
+  BlockAPI,
 } from "@editorjs/editorjs";
 
 interface Tune {
@@ -15,7 +15,7 @@ interface Tune {
 
 interface CustomImageInstance {
   data?: BlockToolData;
-  api: API;
+  block: BlockAPI;
   config?: ToolConfig;
 }
 
@@ -23,7 +23,7 @@ interface CustomImageInstance {
 
 class CustomImage implements BlockTool {
   private _data: BlockToolData;
-  private _api: API;
+  private _block: BlockAPI;
   private _config: ToolConfig;
   private _wrapper: HTMLElement | undefined;
   private _TuneList: Tune[] = [
@@ -54,9 +54,9 @@ class CustomImage implements BlockTool {
   }
 
   // 최초에 생성될 때 호출
-  constructor({ data, api, config }: CustomImageInstance) {
+  constructor({ data, block, config }: CustomImageInstance) {
     this._data = data || { url: "" };
-    this._api = api;
+    this._block = block;
     this._config = config || {};
   }
 
@@ -148,11 +148,8 @@ class CustomImage implements BlockTool {
     this._TuneList.forEach((tune) => {
       this._wrapper?.classList.toggle(tune.name, !!this._data[tune.name]);
 
-      if (tune.name === "stretched") {
-        this._api.blocks.stretchBlock(
-          this._api.blocks.getCurrentBlockIndex(),
-          !!this._data.stretched
-        );
+      if (tune.name === "stretched" && this._block) {
+        this._block.stretched = !!this._data[tune.name];
       }
     });
   }
