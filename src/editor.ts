@@ -7,6 +7,7 @@ import CustomImage from "./image";
 import Code from "@editorjs/code";
 import InlineCode from "@editorjs/inline-code";
 import Delimiter from "@editorjs/delimiter";
+import DragDrop from "editorjs-drag-drop";
 
 declare global {
   interface Window {
@@ -44,6 +45,8 @@ export const editor = new EditorJS({
   placeholder: "Type your text here...",
 
   data: { blocks: [] },
-  onReady: () => {},
+  onReady: () => {
+    new DragDrop(editor);
+  },
   onChange: (_api, _event) => {},
 });
