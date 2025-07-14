@@ -1,10 +1,12 @@
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 import List from "@editorjs/list";
-import Table from "@editorjs/table";
 import Quote from "@editorjs/quote";
-import InlineCode from "@editorjs/inline-code";
+import Table from "@editorjs/table";
 import CustomImage from "./image";
+import Code from "@editorjs/code";
+import InlineCode from "@editorjs/inline-code";
+import Delimiter from "@editorjs/delimiter";
 
 declare global {
   interface Window {
@@ -19,8 +21,6 @@ export const editor = new EditorJS({
   tools: {
     header: Header,
     list: List,
-    table: Table,
-    inlineCode: InlineCode,
     quote: {
       class: Quote,
       config: {
@@ -28,6 +28,7 @@ export const editor = new EditorJS({
         captionPlaceholder: "Quote's author",
       },
     },
+    table: Table,
     image: {
       class: CustomImage,
       inlineToolbar: false,
@@ -35,24 +36,14 @@ export const editor = new EditorJS({
         placeholder: "Paste an image URL or upload an image file...",
       },
     },
+    code: Code,
+    inlineCode: InlineCode,
+    delimiter: Delimiter,
   },
 
   placeholder: "Type your text here...",
 
-  // 초기 데이터를 정의할 수 있음
-  // data: {
-  //   blocks: [
-  //     {
-  //       type: "header",
-  //       data: {
-  //         text: "Welcome to Editor.js",
-  //         level: 2,
-  //       },
-  //     },
-  //   ],
-  // },
-
+  data: { blocks: [] },
   onReady: () => {},
-
   onChange: (_api, _event) => {},
 });
