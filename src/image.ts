@@ -33,12 +33,12 @@ class CustomImage implements BlockTool {
   ];
 
   // Editor.js 툴바에 표시될 아이콘과 제목을 정의
-  static get toolbox() {
-    return {
-      title: "Image",
-      icon: "⚒️",
-    };
-  }
+  // static get toolbox() {
+  //   return {
+  //     title: "Image",
+  //     icon: "⚒️",
+  //   };
+  // }
 
   // 툴이 붙여넣기 이벤트를 수신할 수 있도록 설정
   static get pasteConfig() {
@@ -62,14 +62,20 @@ class CustomImage implements BlockTool {
 
   // Editor.js가 이 툴을 렌더링할 때 호출
   render() {
-    const input = this._createInput(this._config.placeholder);
-    input.value = this._data && this._data.url ? this._data.url : "";
+    const input = this._createElement<HTMLInputElement>(
+      "input",
+      "image-input",
+      {
+        placeholder: this._config.placeholder || "...",
+        value: this._data?.url || "",
+      }
+    );
 
     input.addEventListener("paste", (event: ClipboardEvent) => {
       this._renderImageView(event.clipboardData?.getData("text/plain") || "");
     });
 
-    this._wrapper = this._createWrapper("image-wrapper");
+    this._wrapper = this._createElement("div", "image-wrapper");
     this._wrapper.appendChild(input);
 
     return this._wrapper;
@@ -77,7 +83,7 @@ class CustomImage implements BlockTool {
 
   // Editor.js가 이 툴의 설정을 렌더링할 때 호출
   renderSettings() {
-    const tuneWrapper = this._createWrapper("tuneList-wrapper");
+    const tuneWrapper = this._createElement("div", "tuneList-wrapper");
 
     const tuneButtonList = this._TuneList.map((tune) =>
       this._createTuneButton(tune)
@@ -132,8 +138,13 @@ class CustomImage implements BlockTool {
   private _renderImageView(url: string) {
     if (!this._wrapper) return;
 
-    const image = this._createImage(url);
-    const caption = this._createInput("Caption...");
+    const image = this._createElement("img", null, {
+      src: url,
+      alt: "Image",
+    });
+    const caption = this._createElement<HTMLInputElement>("input", null, {
+      placeholder: "Caption...",
+    });
 
     this._wrapper.replaceChildren(image, caption);
     this._acceptTune();
@@ -155,33 +166,33 @@ class CustomImage implements BlockTool {
   }
 
   // 컴포넌트 생성 함수 -----------------------------------------
-  private _createWrapper(className: string) {
-    const wrapper = document.createElement("div");
-    wrapper.classList.add(className);
+  private _createElement<T extends HTMLElement = HTMLElement>(
+    tag: string,
+    classNames?: string | string[] | null,
+    attributes?: Record<string, string>
+  ): T {
+    const element = document.createElement(tag) as T;
 
-    return wrapper;
+    if (Array.isArray(classNames)) {
+      element.classList.add(...classNames);
+    } else if (classNames) {
+      element.classList.add(classNames);
+    }
+
+    for (const attrName in attributes) {
+      if (attrName === "innerHTML") {
+        element.innerHTML = attributes[attrName];
+      } else {
+        element.setAttribute(attrName, attributes[attrName]);
+      }
+    }
+
+    return element;
   }
-
-  private _createInput(placeholder: string) {
-    const input = document.createElement("input");
-    input.classList.add("image-input");
-    input.placeholder = placeholder;
-
-    return input;
-  }
-
-  private _createImage(url: string) {
-    const image = document.createElement("img");
-    image.src = url;
-    image.alt = "Image";
-
-    return image;
-  }
-
   private _createTuneButton(tune: Tune) {
-    const button = document.createElement("button");
-    button.classList.add("tune-button");
-    button.innerHTML = tune.icon;
+    const button = this._createElement("button", "tune-button", {
+      innerHTML: tune.icon,
+    });
 
     button.addEventListener("click", () => {
       this._toggleTune(tune);
